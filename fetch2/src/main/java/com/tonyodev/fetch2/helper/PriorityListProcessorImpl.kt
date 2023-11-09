@@ -6,14 +6,17 @@ import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import com.tonyodev.fetch2.*
+import com.tonyodev.fetch2.ACTION_QUEUE_BACKOFF_RESET
+import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.EXTRA_NAMESPACE
+import com.tonyodev.fetch2.NetworkType
+import com.tonyodev.fetch2.PrioritySort
 import com.tonyodev.fetch2.downloader.DownloadManager
-import com.tonyodev.fetch2core.HandlerWrapper
+import com.tonyodev.fetch2.fetch.ListenerCoordinator
 import com.tonyodev.fetch2.provider.DownloadProvider
 import com.tonyodev.fetch2.provider.NetworkInfoProvider
 import com.tonyodev.fetch2.util.DEFAULT_PRIORITY_QUEUE_INTERVAL_IN_MILLISECONDS
-import com.tonyodev.fetch2.NetworkType
-import com.tonyodev.fetch2.fetch.ListenerCoordinator
+import com.tonyodev.fetch2core.HandlerWrapper
 import com.tonyodev.fetch2core.Logger
 import com.tonyodev.fetch2core.isFetchFileServerUrl
 import java.util.concurrent.TimeUnit
@@ -200,6 +203,7 @@ class PriorityListProcessorImpl constructor(private val handlerWrapper: HandlerW
     override fun sendBackOffResetSignal() {
         synchronized(lock) {
             val intent = Intent(ACTION_QUEUE_BACKOFF_RESET)
+            intent.setPackage(context.packageName)
             intent.putExtra(EXTRA_NAMESPACE, namespace)
             context.sendBroadcast(intent)
         }
